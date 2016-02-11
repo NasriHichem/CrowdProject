@@ -21,15 +21,25 @@ import java.awt.SystemColor;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
+import project.client.locators.UserDelegate;
+import project.client.models.Projcts_Model;
+import javax.swing.JScrollBar;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+
+import projects.serveur.entites.Category;
+import projects.serveur.entites.Project;
+
 public class GuiCompteModirator extends JFrame {
 	
 
 	private JPanel contentPane;
 	private JTable table_projects;
-
-	/**
-	 * Launch the application.
-	 */
+	private JTable table;
+	private JComboBox<String> comboBox;
+	private ArrayList<Category>categories=new ArrayList<>();
 	public static void main(String[] args) {
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -87,6 +97,10 @@ public class GuiCompteModirator extends JFrame {
 		contentPane.add(lblSearchProject);
 		
 		JRadioButton radioCat = new JRadioButton("Category");
+		radioCat.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		    catbuttonActionPerformed(e);		   
+		}});
 		radioCat.setBounds(26, 65, 109, 23);
 		contentPane.add(radioCat);
 		
@@ -98,7 +112,7 @@ public class GuiCompteModirator extends JFrame {
 		radioName.setBounds(26, 117, 109, 23);
 		contentPane.add(radioName);
 		
-	    JComboBox comboBox = new JComboBox();
+	    comboBox = new JComboBox<String>();
 		comboBox.setBounds(36, 146, 70, 20);
 		contentPane.add(comboBox);
 		
@@ -117,9 +131,7 @@ public class GuiCompteModirator extends JFrame {
 		lblListOfProjects.setBounds(389, 44, 129, 14);
 		contentPane.add(lblListOfProjects);
 		
-		table_projects = new JTable();
-		table_projects.setBounds(663, 192, -286, -96);
-		contentPane.add(table_projects);
+		
 		
 		JButton btnDetail = new JButton("Detail");
 		btnDetail.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\detail.png"));
@@ -142,6 +154,23 @@ public class GuiCompteModirator extends JFrame {
 		panel.setBounds(0, 317, 728, 268);
 		contentPane.add(panel);
 		
+		table = new JTable();
+		table.setBackground(SystemColor.menu);
+		table.setBounds(314, 65, 250, 109);
+		table.setModel(new Projcts_Model());
+
+		contentPane.add(table);
 		
+		
+	}
+
+	protected void catbuttonActionPerformed(ActionEvent e) {
+	        
+		    categories=UserDelegate.getListCategory();
+		    for(Category c :categories)
+			{
+			comboBox.addItem(c.getName_category()); 
+			}
+	
 	}
 }
