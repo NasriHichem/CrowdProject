@@ -30,6 +30,12 @@ public class UserDelegate {
 	public static ArrayList<Project>  getList(){
     return  getProxyProjectServices().getListProjects();
 	}
+	public static ArrayList<Project>  getListprojectsnomconfirmed(int value){
+	    return  getProxyProjectServices().getProjectsnoConfirmed(value);
+		}
+	public static ArrayList<Project>  getListByCategory(String category){
+	    return  getProxyProjectServices().findProjectsByCategory(category);
+		}
 	public static ArrayList<Category>  getListCategory(){
 	    return  getProxyCategoryservices().getList();
 		}

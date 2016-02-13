@@ -13,8 +13,8 @@ public class Projcts_Model extends AbstractTableModel {
     
     String [] colunmTab= {"Name","Title","Objectif"};
 	ArrayList<Project>projects=new ArrayList<>() ;
-    public Projcts_Model() {  	
-		 projects=	UserDelegate.getList();	  						
+    public Projcts_Model(ArrayList<Project>projects) {  	
+		 this.projects=projects;		  						
     }
     
 
