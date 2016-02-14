@@ -7,6 +7,7 @@ import java.awt.Font;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,11 +25,18 @@ import java.awt.SystemColor;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
-import project.client.locators.UserDelegate;
+import project.client.locators.CategoryDelegate;
+import project.client.locators.ProjectDelegate;
 import project.client.mails.Sendmail;
 import project.client.models.Projcts_Model;
 import javax.swing.JScrollBar;
 import javax.swing.table.DefaultTableModel;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -36,6 +44,8 @@ import java.awt.event.ActionEvent;
 import projects.serveur.entites.Category;
 import projects.serveur.entites.Project;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextPane;
+import javax.swing.JEditorPane;
 
 public class GuiCompteModirator extends JFrame {
 	
@@ -46,11 +56,14 @@ public class GuiCompteModirator extends JFrame {
 	private JComboBox<String> comboBox;
 	private ArrayList<Category>categories=new ArrayList<>();
 	private ArrayList<Project>projects=new ArrayList<>();
-	JLabel lblnamep,lbltitle,lblshortp,lblduration,lbltarget,lbllocation,lblcat,lblnamec,lblcemail;
+	JLabel lblnamep,lbltitle,lblshortp,lblduration,lbltarget,lbllocation,lblcat,lblnamec,lblcemail,
+	lblCauseOfDenied;
 	JPanel panel ;
 	JTabbedPane tabbedPane;
 	JButton btnConfirmed,btnDenied ;
+	JEditorPane editorcause;
 	int choix ;
+	Integer index;
 	public static void main(String[] args) {
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -112,9 +125,10 @@ public class GuiCompteModirator extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 		    catbuttonActionPerformed(e);		   
 		}});
+		ButtonGroup group=new ButtonGroup();
+		
 		radioCat.setBounds(26, 65, 109, 23);
 		contentPane.add(radioCat);
-		
 		JRadioButton radioDate = new JRadioButton("Date");
 		radioDate.setBounds(26, 91, 109, 23);
 		contentPane.add(radioDate);
@@ -122,11 +136,13 @@ public class GuiCompteModirator extends JFrame {
 		JRadioButton radioName = new JRadioButton("Name");
 		radioName.setBounds(26, 117, 109, 23);
 		contentPane.add(radioName);
-		
+	
 	    comboBox = new JComboBox<String>();
 		comboBox.setBounds(36, 146, 70, 20);
 		contentPane.add(comboBox);
-		
+		group.add(radioCat);
+		group.add(radioDate);
+		group.add(radioName);
 		JRadioButton radionoConf = new JRadioButton("No confirmed");
 		radionoConf.setBounds(26, 179, 109, 23);
 		radionoConf.addActionListener(new ActionListener() {
@@ -134,7 +150,7 @@ public class GuiCompteModirator extends JFrame {
 				radionoConfActionPerformed(e);		   
 		}});
 		contentPane.add(radionoConf);
-		
+		group.add(radionoConf);
 		JButton btnsearch = new JButton("");
 		btnsearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -164,10 +180,10 @@ public class GuiCompteModirator extends JFrame {
 		contentPane.add(btnDetail);
 		
 		table = new JTable();
-		table.setBackground(SystemColor.menu);
 		table.setBounds(314, 65, 250, 109);
-		projects=UserDelegate.getList();
+		projects=ProjectDelegate.getList();
 		table.setModel(new Projcts_Model(projects));
+		table.setBackground(Color.WHITE);
 
 		contentPane.add(table);
 		
@@ -320,28 +336,82 @@ public class GuiCompteModirator extends JFrame {
 		btnDenied.setBounds(571, 222, 120, 23);
 		panel.add(btnDenied);
 		
+		lblCauseOfDenied = new JLabel("Cause of denied :");
+		lblCauseOfDenied.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
+		lblCauseOfDenied.setForeground(new Color(0, 0, 128));
+		lblCauseOfDenied.setBounds(377, 135, 100, 14);		
+		panel.add(lblCauseOfDenied);
+		
+		editorcause = new JEditorPane();
+		editorcause.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
+		editorcause.setBounds(504, 135, 209, 76);
+		
+		panel.add(editorcause);
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Stastic", new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\statistique.png"), panel_1, null);
-		tabbedPane.setEnabledAt(1, false);
+		panel_1.setLayout(null);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_2.setBounds(0, 0, 279, 268);
+		panel_1.add(panel_2);
+		panel_2.setLayout(null);
+		
+		JLabel lblStasticOfProject = new JLabel("Stastic of project no confirmed");
+		lblStasticOfProject.setBounds(61, 6, 157, 14);
+		lblStasticOfProject.setForeground(new Color(0, 0, 128));
+		lblStasticOfProject.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
+		panel_2.add(lblStasticOfProject);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_3.setBounds(278, 0, 445, 268);
+		panel_1.add(panel_3);
+		DefaultPieDataset pieDataset = new DefaultPieDataset();	
+		
+		pieDataset.setValue("Valeur1", new Integer(27));		
+		pieDataset.setValue("Valeur2", new Integer(10));		
+		pieDataset.setValue("Valeur3", new Integer(50));		
+		pieDataset.setValue("Valeur4", new Integer(5));
+		JFreeChart pieChart = ChartFactory.createPieChart(null,		
+		pieDataset, true, true, true);
+		
+		ChartPanel cPanel = new ChartPanel(pieChart);	
+		cPanel.setMaximumDrawHeight(50);
+		cPanel.setLocation(-200, 25);
+		cPanel.setSize(50,50);
+		panel_2.add(cPanel);
+		tabbedPane.setEnabledAt(1, true);
 		
 		
 	}
 
 	protected void btnDeniedactionperformed(ActionEvent e) throws AddressException, MessagingException {
-		   Sendmail sm=new Sendmail(lblcemail.getText());
-		   sm.send();
+		   
+		int answer = JOptionPane.showConfirmDialog(this,
+		"Are you sure to delete this project");
+	    if (answer == JOptionPane.YES_OPTION) {
+	     Sendmail sm=new Sendmail(lblcemail.getText(), editorcause.getText());
+	     sm.send();
+		 ProjectDelegate.remove(projects.get(index));
+	    } else if (answer == JOptionPane.NO_OPTION) {
+	      
+	    	
+	    }
+		  
+		   
 		
 	}
 
 	protected void btnDetailsActionperfomed(ActionEvent e) {
 		Project p=null ;	
-		Integer index=new Integer(table.getSelectedRow());
+	    index=new Integer(table.getSelectedRow());
 		
 		if(index==-1)
 		{
 			JOptionPane.showMessageDialog(this, "Please select an project", "ERROR", 
-					JOptionPane.INFORMATION_MESSAGE, 
-					new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\erreur.png"));
+			JOptionPane.INFORMATION_MESSAGE, 
+			new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\erreur.png"));
 		}
 		else
 		{
@@ -384,19 +454,25 @@ public class GuiCompteModirator extends JFrame {
 		{
 		String category=categories.get(comboBox.getSelectedIndex()).getName_category();
 		projects=new ArrayList<>();
-		projects=UserDelegate.getListByCategory(category);		
+		projects=ProjectDelegate.getListByCategory(category);
+		if(projects.size()==0)
+		{
+			JOptionPane.showMessageDialog(this, "No project matched this category", "ERROR", 
+			JOptionPane.INFORMATION_MESSAGE, 
+			new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\erreur.png"));
+		}
 		table.setModel(new Projcts_Model(projects));
 		}
 		if(choix==2)
 		{				
-		table.setModel(new Projcts_Model( UserDelegate.getListprojectsnomconfirmed(0)));
+		table.setModel(new Projcts_Model( ProjectDelegate.getListprojectsnomconfirmed(0)));
 		}
 		
 	}
 
 	protected void catbuttonActionPerformed(ActionEvent e) {
 	        choix=1;
-		    categories=UserDelegate.getListCategory();
+		    categories=CategoryDelegate.getListCategory();
 		    for(Category c :categories)
 			{
 			comboBox.addItem(c.getName_category()); 

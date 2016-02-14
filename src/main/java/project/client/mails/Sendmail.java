@@ -23,10 +23,11 @@ public class Sendmail {
     final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
     final String username = "ambotious.project@gmail.com";
 	final String password = "azerty123456789smartdev";
-	private String receiver ;
+	private String receiver,textemail ;
 	Session session;
-	public Sendmail(String receiver) {
+	public Sendmail(String receiver,String textemail) {
 	 this.receiver=receiver;
+	 this.textemail=textemail;
 	 Properties props = System.getProperties();
      props.setProperty("mail.smtp.host", "smtp.gmail.com");
 	 props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
@@ -55,7 +56,7 @@ public class Sendmail {
 			e.printStackTrace();
 		}
         MimeBodyPart mbp2 = new MimeBodyPart();	
-        mbp2.setText("Sorry your project are deinded");    
+        mbp2.setText(this.textemail);    
         MimeMultipart mp = new MimeMultipart();
         try {
 			mp.addBodyPart(mbp1);

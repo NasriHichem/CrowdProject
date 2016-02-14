@@ -3,7 +3,7 @@ package project.client.models;
 
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
-import project.client.locators.UserDelegate;
+import project.client.locators.ProjectDelegate;
 import projects.serveur.entites.Project;
 
 
