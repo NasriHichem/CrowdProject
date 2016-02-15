@@ -34,11 +34,18 @@ import javax.swing.table.DefaultTableModel;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 
 import projects.serveur.entites.Category;
@@ -89,10 +96,16 @@ public class GuiCompteModirator extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
 	 */
-	public GuiCompteModirator() {
+	public GuiCompteModirator() throws IOException {
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+		Date date_p=new Date();
+		formater.format(date_p);
+		System.out.println(formater.format(date_p));
+		System.out.println(ProjectDelegate.getNumberProjects(date_p));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 744, 624);
+		setBounds(100, 100, 859, 742);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.menu);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -188,7 +201,7 @@ public class GuiCompteModirator extends JFrame {
 		contentPane.add(table);
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(0, 287, 728, 298);
+		tabbedPane.setBounds(0, 236, 843, 515);
 		contentPane.add(tabbedPane);
 		
 		panel = new JPanel();
@@ -350,37 +363,40 @@ public class GuiCompteModirator extends JFrame {
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Stastic", new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\statistique.png"), panel_1, null);
 		panel_1.setLayout(null);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_2.setBounds(0, 0, 279, 268);
-		panel_1.add(panel_2);
-		panel_2.setLayout(null);
-		
-		JLabel lblStasticOfProject = new JLabel("Stastic of project no confirmed");
-		lblStasticOfProject.setBounds(61, 6, 157, 14);
-		lblStasticOfProject.setForeground(new Color(0, 0, 128));
-		lblStasticOfProject.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		panel_2.add(lblStasticOfProject);
-		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_3.setBounds(278, 0, 445, 268);
-		panel_1.add(panel_3);
-		DefaultPieDataset pieDataset = new DefaultPieDataset();	
+		/*DefaultPieDataset pieDataset = new DefaultPieDataset();	
 		
 		pieDataset.setValue("Valeur1", new Integer(27));		
 		pieDataset.setValue("Valeur2", new Integer(10));		
 		pieDataset.setValue("Valeur3", new Integer(50));		
 		pieDataset.setValue("Valeur4", new Integer(5));
 		JFreeChart pieChart = ChartFactory.createPieChart(null,		
-		pieDataset, true, true, true);
+		pieDataset, true, true, true);*/
+		 DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
+	     line_chart_dataset.addValue( 15 , "schools" , "Jan" );
+		 line_chart_dataset.addValue( 30 , "schools" , "Fab" );
+		 line_chart_dataset.addValue( 60 , "schools" , "Mar" );
+		 line_chart_dataset.addValue( 120 , "schools" , "Apr" );
+		 line_chart_dataset.addValue( 240 , "schools" , "May" ); 
+		 line_chart_dataset.addValue( 300 , "schools" , "Jan" );
+		 line_chart_dataset.addValue( 300 , "schools" , "Jui" );
+		 line_chart_dataset.addValue( 300 , "schools" , "Aug" );
+		 line_chart_dataset.addValue( 300 , "schools" , "Sep" );
+		 line_chart_dataset.addValue( 300 , "schools" , "Oct" );
+		 line_chart_dataset.addValue( 300 , "schools" , "Nov" );
+		 line_chart_dataset.addValue( 300 , "schools" , "Dec" );
+		 JFreeChart lineChartObject = ChartFactory.createLineChart(
+		 "","",
+		 "",
+		 line_chart_dataset,PlotOrientation.VERTICAL,
+		  true,true,false);
+		 int width = 640;
+	      int height = 480;
+		  File lineChart = new File( "LineChart.jpeg" ); 
+		  ChartUtilities.saveChartAsJPEG(lineChart ,lineChartObject, width ,height);
 		
-		ChartPanel cPanel = new ChartPanel(pieChart);	
-		cPanel.setMaximumDrawHeight(50);
-		cPanel.setLocation(-200, 25);
-		cPanel.setSize(50,50);
-		panel_2.add(cPanel);
+		   ChartPanel cPanel = new ChartPanel(lineChartObject);
+		   cPanel.setBounds(103, 0, 680, 420);
+		   panel_1.add(cPanel);
 		tabbedPane.setEnabledAt(1, true);
 		
 		

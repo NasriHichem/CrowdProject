@@ -1,6 +1,7 @@
 package project.client.locators;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import projects.serveur.entites.Category;
 import projects.serveur.entites.Project;
@@ -32,6 +33,12 @@ public class ProjectDelegate {
 	public static ArrayList<Project>  getListByCategory(String category){
 	    return  getProxyProjectServices().findProjectsByCategory(category);
 		}
+	
+	public static Long getNumberProjects(Date date)
+	{
+		return  getProxyProjectServices().getNumberProjectsByDate(date);
+	}
+	
 	public static void remove(Project p)
 	{
 		 getProxyProjectServices().removeProject(p);
