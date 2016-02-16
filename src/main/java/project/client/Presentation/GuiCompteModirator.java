@@ -43,8 +43,10 @@ import org.jfree.data.general.DefaultPieDataset;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 
@@ -53,6 +55,9 @@ import projects.serveur.entites.Project;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
+
+
 
 public class GuiCompteModirator extends JFrame {
 	
@@ -71,6 +76,7 @@ public class GuiCompteModirator extends JFrame {
 	JEditorPane editorcause;
 	int choix ;
 	Integer index;
+		
 	public static void main(String[] args) {
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -97,13 +103,9 @@ public class GuiCompteModirator extends JFrame {
 	/**
 	 * Create the frame.
 	 * @throws IOException 
+	 * @throws ParseException 
 	 */
-	public GuiCompteModirator() throws IOException {
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		Date date_p=new Date();
-		formater.format(date_p);
-		System.out.println(formater.format(date_p));
-		System.out.println(ProjectDelegate.getNumberProjects(date_p));
+	public GuiCompteModirator() throws IOException, ParseException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 859, 742);
 		contentPane = new JPanel();
@@ -177,7 +179,7 @@ public class GuiCompteModirator extends JFrame {
 		JLabel lblListOfProjects = new JLabel("List of projects");
 		lblListOfProjects.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
 		lblListOfProjects.setForeground(new Color(0, 0, 128));
-		lblListOfProjects.setBounds(389, 44, 129, 14);
+		lblListOfProjects.setBounds(314, 44, 129, 14);
 		contentPane.add(lblListOfProjects);
 		
 		
@@ -189,16 +191,19 @@ public class GuiCompteModirator extends JFrame {
 			}
 		});
 		btnDetail.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\detail.png"));
-		btnDetail.setBounds(327, 202, 89, 23);
+		btnDetail.setBounds(314, 225, 89, 23);
 		contentPane.add(btnDetail);
+		projects=ProjectDelegate.getList();
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(314, 65, 493, 149);
+		contentPane.add(scrollPane);
 		
 		table = new JTable();
-		table.setBounds(314, 65, 250, 109);
-		projects=ProjectDelegate.getList();
+		scrollPane.setViewportView(table);
+		table.setBorder(new LineBorder(new Color(0, 0, 0)));
 		table.setModel(new Projcts_Model(projects));
 		table.setBackground(Color.WHITE);
-
-		contentPane.add(table);
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 236, 843, 515);
@@ -330,7 +335,7 @@ public class GuiCompteModirator extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnConfirmed.setBounds(423, 222, 118, 23);
+		btnConfirmed.setBounds(349, 367, 118, 23);
 		panel.add(btnConfirmed);
 		
 		btnDenied = new JButton("Denied");
@@ -346,7 +351,7 @@ public class GuiCompteModirator extends JFrame {
 			}
 		});
 		btnDenied.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\refuser.png"));
-		btnDenied.setBounds(571, 222, 120, 23);
+		btnDenied.setBounds(570, 367, 120, 23);
 		panel.add(btnDenied);
 		
 		lblCauseOfDenied = new JLabel("Cause of denied :");
@@ -357,7 +362,7 @@ public class GuiCompteModirator extends JFrame {
 		
 		editorcause = new JEditorPane();
 		editorcause.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		editorcause.setBounds(504, 135, 209, 76);
+		editorcause.setBounds(376, 160, 439, 179);
 		
 		panel.add(editorcause);
 		JPanel panel_1 = new JPanel();
@@ -371,20 +376,34 @@ public class GuiCompteModirator extends JFrame {
 		pieDataset.setValue("Valeur4", new Integer(5));
 		JFreeChart pieChart = ChartFactory.createPieChart(null,		
 		pieDataset, true, true, true);*/
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calender=Calendar.getInstance();
+		calender.set(calender.DATE,1 );
+		calender.set(calender.MONTH, 1);
+		calender.set(calender.YEAR, 2016);
+		Date date1 =calender.getTime();
+		
+		calender.set(calender.DATE, 28);
+		calender.set(calender.MONTH, 1);
+		calender.set(calender.YEAR, 2016);
+		Date date2 =calender.getTime();
+		System.out.println(formater.format(date1));
+		System.out.println(ProjectDelegate.getNumberProjects(formater.format(date1),
+		formater.format(date2)));
 		 DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
-	     line_chart_dataset.addValue( 15 , "schools" , "Jan" );
-		 line_chart_dataset.addValue( 30 , "schools" , "Fab" );
-		 line_chart_dataset.addValue( 60 , "schools" , "Mar" );
-		 line_chart_dataset.addValue( 120 , "schools" , "Apr" );
-		 line_chart_dataset.addValue( 240 , "schools" , "May" ); 
-		 line_chart_dataset.addValue( 300 , "schools" , "Jan" );
-		 line_chart_dataset.addValue( 300 , "schools" , "Jui" );
-		 line_chart_dataset.addValue( 300 , "schools" , "Aug" );
-		 line_chart_dataset.addValue( 300 , "schools" , "Sep" );
-		 line_chart_dataset.addValue( 300 , "schools" , "Oct" );
-		 line_chart_dataset.addValue( 300 , "schools" , "Nov" );
-		 line_chart_dataset.addValue( 300 , "schools" , "Dec" );
-		 JFreeChart lineChartObject = ChartFactory.createLineChart(
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-01-01", "2016-01-31") , "projects" , "Jan" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-02-01", "2016-02-28") , "projects" , "Fab" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-03-01", "2016-03-31") , "projects" , "Mar" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-04-01", "2016-04-30") , "projects" , "Apr" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-05-01", "2016-05-31") , "projects" , "May" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-06-01", "2016-06-31") , "projects" , "Jui" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-07-01", "2016-07-30") , "projects" , "Jul" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-08-01", "2016-08-31") , "projects" , "Aug" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-09-01", "2016-09-30") , "projects" , "Sep" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-10-01", "2016-10-31") , "projects" , "Oct" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-11-01", "2016-11-30") , "projects" , "Nov" );
+	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-12-01", "2016-12-31") , "projects" , "Dec" );
+	     JFreeChart lineChartObject = ChartFactory.createLineChart(
 		 "","",
 		 "",
 		 line_chart_dataset,PlotOrientation.VERTICAL,
@@ -403,7 +422,8 @@ public class GuiCompteModirator extends JFrame {
 	}
 
 	protected void btnDeniedactionperformed(ActionEvent e) throws AddressException, MessagingException {
-		   
+		 
+		
 		int answer = JOptionPane.showConfirmDialog(this,
 		"Are you sure to delete this project");
 	    if (answer == JOptionPane.YES_OPTION) {
@@ -448,8 +468,8 @@ public class GuiCompteModirator extends JFrame {
 		lblnamep.setText(p.getName());
 		lbltitle.setText(p.getTitle());
 		lblshortp.setText(p.getShort_presentation());
-		lblduration.setText(String.valueOf(p.getDuration())+" jours");
-		lbltarget.setText(String.valueOf(p.getTurget_funding()+" Tdt"));
+		lblduration.setText(String.valueOf(p.getDuration())+" days");
+		lbltarget.setText(String.valueOf(p.getTurget_funding()+" DNT"));
 		lbllocation.setText(p.getLocation());
 		lblcat.setText(p.getCategory().getName_category());
 		lblnamec.setText(p.getCreator().getFirstname()+" "+p.getCreator().getLastname());

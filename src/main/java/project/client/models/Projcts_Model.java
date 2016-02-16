@@ -11,7 +11,7 @@ import projects.serveur.entites.Project;
 public class Projcts_Model extends AbstractTableModel {
     
     
-    String [] colunmTab= {"Name","Title","Objectif"};
+    String [] colunmTab= {"Name","Title","Funding target","Date publish","Creator name"};
 	ArrayList<Project>projects=new ArrayList<>() ;
     public Projcts_Model(ArrayList<Project>projects) {  	
 		 this.projects=projects;		  						
@@ -34,12 +34,15 @@ public class Projcts_Model extends AbstractTableModel {
         case 0:
         return  projects.get(rowIndex).getName();
         case 1 :
-                return projects.get(rowIndex).getTitle();
-            case 2: 
-                return projects.get(rowIndex).getTurget_funding() ;
-                    
-            default:
-                return null;
+        return projects.get(rowIndex).getTitle();
+        case 2: 
+        return projects.get(rowIndex).getTurget_funding() ;
+        case 3: 
+        return projects.get(rowIndex).getDate_publish() ;
+        case 4: 
+        return projects.get(rowIndex).getCreator().getFirstname()+" "+ projects.get(rowIndex).getCreator().getLastname();                 
+         default:
+           return null;
     }
     
 }

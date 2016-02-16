@@ -34,9 +34,9 @@ public class ProjectDelegate {
 	    return  getProxyProjectServices().findProjectsByCategory(category);
 		}
 	
-	public static Long getNumberProjects(Date date)
+	public static int getNumberProjects(String date1,String date2)
 	{
-		return  getProxyProjectServices().getNumberProjectsByDate(date);
+		return  getProxyProjectServices().getNumberProjectsByDate(date1,date2);
 	}
 	
 	public static void remove(Project p)
