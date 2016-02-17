@@ -56,6 +56,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 
 
 
@@ -106,33 +108,36 @@ public class GuiCompteModirator extends JFrame {
 	 * @throws ParseException 
 	 */
 	public GuiCompteModirator() throws IOException, ParseException {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 859, 742);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnAccount = new JMenu("Account");
+		mnAccount.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\user.png"));
+		menuBar.add(mnAccount);
+		
+		JMenuItem mntmLogout = new JMenuItem("Logout");
+		mntmLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				new authentification().setVisible(true);
+			    dispose();
+			}
+		});
+		mnAccount.add(mntmLogout);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.menu);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JMenuItem mntmAccount = new JMenuItem("Account");
-		mntmAccount.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\user.png"));
-		mntmAccount.setBounds(0, 0, 129, 22);
-		contentPane.add(mntmAccount);
-		
-		JMenuItem mntmMessages = new JMenuItem("Messages");
-		mntmMessages.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\msg.png"));
-		mntmMessages.setBounds(126, 0, 129, 22);
-		contentPane.add(mntmMessages);
-		
-		JMenuItem mntmHelp = new JMenuItem("Help");
-		mntmHelp.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\aide.png"));
-		mntmHelp.setBounds(228, 0, 129, 22);
-		contentPane.add(mntmHelp);
-		
 		JLabel lblSearchProject = new JLabel("Search project by :");
 		lblSearchProject.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
 		lblSearchProject.setForeground(new Color(0, 0, 128));
-		lblSearchProject.setBounds(26, 44, 122, 14);
+		lblSearchProject.setBounds(133, 44, 122, 14);
 		contentPane.add(lblSearchProject);
 		
 		JRadioButton radioCat = new JRadioButton("Category");
@@ -142,24 +147,24 @@ public class GuiCompteModirator extends JFrame {
 		}});
 		ButtonGroup group=new ButtonGroup();
 		
-		radioCat.setBounds(26, 65, 109, 23);
+		radioCat.setBounds(132, 65, 109, 23);
 		contentPane.add(radioCat);
 		JRadioButton radioDate = new JRadioButton("Date");
-		radioDate.setBounds(26, 91, 109, 23);
+		radioDate.setBounds(132, 91, 109, 23);
 		contentPane.add(radioDate);
 		
 		JRadioButton radioName = new JRadioButton("Name");
-		radioName.setBounds(26, 117, 109, 23);
+		radioName.setBounds(132, 117, 109, 23);
 		contentPane.add(radioName);
 	
 	    comboBox = new JComboBox<String>();
-		comboBox.setBounds(36, 146, 70, 20);
+		comboBox.setBounds(142, 147, 70, 20);
 		contentPane.add(comboBox);
 		group.add(radioCat);
 		group.add(radioDate);
 		group.add(radioName);
 		JRadioButton radionoConf = new JRadioButton("No confirmed");
-		radionoConf.setBounds(26, 179, 109, 23);
+		radionoConf.setBounds(100, 179, 109, 23);
 		radionoConf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				radionoConfActionPerformed(e);		   
@@ -173,7 +178,7 @@ public class GuiCompteModirator extends JFrame {
 			}
 		});
 		btnsearch.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\search.png"));
-		btnsearch.setBounds(131, 145, 89, 23);
+		btnsearch.setBounds(215, 179, 89, 23);
 		contentPane.add(btnsearch);
 		
 		JLabel lblListOfProjects = new JLabel("List of projects");
@@ -333,6 +338,8 @@ public class GuiCompteModirator extends JFrame {
 		btnConfirmed.setEnabled(false);
 		btnConfirmed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				btnconfirmedactionperfomed(e);
 			}
 		});
 		btnConfirmed.setBounds(349, 367, 118, 23);
@@ -342,12 +349,7 @@ public class GuiCompteModirator extends JFrame {
 		btnDenied.setEnabled(false);
 		btnDenied.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					btnDeniedactionperformed(e);
-				} catch (MessagingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				btnDeniedactionperformed(e);
 			}
 		});
 		btnDenied.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\refuser.png"));
@@ -367,29 +369,7 @@ public class GuiCompteModirator extends JFrame {
 		panel.add(editorcause);
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Stastic", new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\statistique.png"), panel_1, null);
-		panel_1.setLayout(null);
-		/*DefaultPieDataset pieDataset = new DefaultPieDataset();	
-		
-		pieDataset.setValue("Valeur1", new Integer(27));		
-		pieDataset.setValue("Valeur2", new Integer(10));		
-		pieDataset.setValue("Valeur3", new Integer(50));		
-		pieDataset.setValue("Valeur4", new Integer(5));
-		JFreeChart pieChart = ChartFactory.createPieChart(null,		
-		pieDataset, true, true, true);*/
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar calender=Calendar.getInstance();
-		calender.set(calender.DATE,1 );
-		calender.set(calender.MONTH, 1);
-		calender.set(calender.YEAR, 2016);
-		Date date1 =calender.getTime();
-		
-		calender.set(calender.DATE, 28);
-		calender.set(calender.MONTH, 1);
-		calender.set(calender.YEAR, 2016);
-		Date date2 =calender.getTime();
-		System.out.println(formater.format(date1));
-		System.out.println(ProjectDelegate.getNumberProjects(formater.format(date1),
-		formater.format(date2)));
+		panel_1.setLayout(null);				
 		 DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
 	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-01-01", "2016-01-31") , "projects" , "Jan" );
 	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-02-01", "2016-02-28") , "projects" , "Fab" );
@@ -418,17 +398,59 @@ public class GuiCompteModirator extends JFrame {
 		   panel_1.add(cPanel);
 		tabbedPane.setEnabledAt(1, true);
 		
+		JLabel label_1 = new JLabel("");
+		label_1.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\profile.png"));
+		label_1.setBounds(10, 27, 119, 140);
+		contentPane.add(label_1);
+		
 		
 	}
 
-	protected void btnDeniedactionperformed(ActionEvent e) throws AddressException, MessagingException {
+	protected void btnconfirmedactionperfomed(ActionEvent e) {
+		Project p=projects.get(index);
+		if(p.isIs_confirmed()==1)
+		{
+		JOptionPane.showMessageDialog(this, "this project are confirmed", "ERROR", 
+	    JOptionPane.INFORMATION_MESSAGE, 
+	    new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\erreur.png"));	
+		}
+		else
+		{
+		p.setIs_confirmed(1);
+		int answer = JOptionPane.showConfirmDialog(this,
+		"Are you sure to confirm this project");
+	    if (answer == JOptionPane.YES_OPTION) {
+		ProjectDelegate.confirm(p);
+		JOptionPane.showMessageDialog(this, "this project is now confirmed", "ERROR", 
+	    JOptionPane.INFORMATION_MESSAGE, 
+	    new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\confirmed.png"));	
+	   }}
+		
+	}
+
+	protected void btnDeniedactionperformed(ActionEvent e)  {
 		 
 		
 		int answer = JOptionPane.showConfirmDialog(this,
 		"Are you sure to delete this project");
 	    if (answer == JOptionPane.YES_OPTION) {
 	     Sendmail sm=new Sendmail(lblcemail.getText(), editorcause.getText());
-	     sm.send();
+	     try {
+			sm.send();
+			JOptionPane.showMessageDialog(this, "Your mail are sended with succeful", "ERROR", 
+	    	JOptionPane.INFORMATION_MESSAGE, 
+		    new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\gmail.png"));
+			ProjectDelegate.remove(projects.get(index));
+			projects.remove(projects.get(index));
+			table.setModel(new Projcts_Model(projects));
+			
+	     } catch (AddressException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (MessagingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		 ProjectDelegate.remove(projects.get(index));
 	    } else if (answer == JOptionPane.NO_OPTION) {
 	      

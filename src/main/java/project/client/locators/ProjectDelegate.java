@@ -44,4 +44,9 @@ public class ProjectDelegate {
 		 getProxyProjectServices().removeProject(p);
 	}
 	
+	public static void confirm(Project p)
+	{
+		getProxyProjectServices().confirmProject(p);
+	}
+	
 }
