@@ -33,7 +33,9 @@ public class ProjectDelegate {
 	public static ArrayList<Project>  getListByCategory(String category){
 	    return  getProxyProjectServices().findProjectsByCategory(category);
 		}
-	
+	public static ArrayList<Project>  getListByname(String name){
+	    return  getProxyProjectServices().findProjectByName(name);
+		}
 	public static int getNumberProjects(String date1,String date2)
 	{
 		return  getProxyProjectServices().getNumberProjectsByDate(date1,date2);

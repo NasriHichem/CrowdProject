@@ -29,6 +29,8 @@ import project.client.locators.CategoryDelegate;
 import project.client.locators.ProjectDelegate;
 import project.client.mails.Sendmail;
 import project.client.models.Projcts_Model;
+import project.client.pdf.CreatePdf;
+
 import javax.swing.JScrollBar;
 import javax.swing.table.DefaultTableModel;
 
@@ -39,6 +41,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+
+import com.itextpdf.text.DocumentException;
 
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -71,10 +75,10 @@ public class GuiCompteModirator extends JFrame {
 	private ArrayList<Category>categories=new ArrayList<>();
 	private ArrayList<Project>projects=new ArrayList<>();
 	JLabel lblnamep,lbltitle,lblshortp,lblduration,lbltarget,lbllocation,lblcat,lblnamec,lblcemail,
-	lblCauseOfDenied;
-	JPanel panel ;
+	lblCauseOfDenied ;
+	JPanel panel,panel_1 ;
 	JTabbedPane tabbedPane;
-	JButton btnConfirmed,btnDenied ;
+	JButton btnConfirmed,btnDenied,label_1  ;
 	JEditorPane editorcause;
 	int choix ;
 	Integer index;
@@ -154,11 +158,16 @@ public class GuiCompteModirator extends JFrame {
 		contentPane.add(radioDate);
 		
 		JRadioButton radioName = new JRadioButton("Name");
+		radioName.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnnameactionperfomred(e);
+			}
+		});
 		radioName.setBounds(132, 117, 109, 23);
 		contentPane.add(radioName);
 	
 	    comboBox = new JComboBox<String>();
-		comboBox.setBounds(142, 147, 70, 20);
+		comboBox.setBounds(142, 147, 147, 20);
 		contentPane.add(comboBox);
 		group.add(radioCat);
 		group.add(radioDate);
@@ -367,35 +376,22 @@ public class GuiCompteModirator extends JFrame {
 		editorcause.setBounds(376, 160, 439, 179);
 		
 		panel.add(editorcause);
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Stastic", new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\statistique.png"), panel_1, null);
-		panel_1.setLayout(null);				
-		 DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-01-01", "2016-01-31") , "projects" , "Jan" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-02-01", "2016-02-28") , "projects" , "Fab" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-03-01", "2016-03-31") , "projects" , "Mar" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-04-01", "2016-04-30") , "projects" , "Apr" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-05-01", "2016-05-31") , "projects" , "May" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-06-01", "2016-06-31") , "projects" , "Jui" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-07-01", "2016-07-30") , "projects" , "Jul" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-08-01", "2016-08-31") , "projects" , "Aug" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-09-01", "2016-09-30") , "projects" , "Sep" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-10-01", "2016-10-31") , "projects" , "Oct" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-11-01", "2016-11-30") , "projects" , "Nov" );
-	     line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-12-01", "2016-12-31") , "projects" , "Dec" );
-	     JFreeChart lineChartObject = ChartFactory.createLineChart(
-		 "","",
-		 "",
-		 line_chart_dataset,PlotOrientation.VERTICAL,
-		  true,true,false);
-		 int width = 640;
-	      int height = 480;
-		  File lineChart = new File( "LineChart.jpeg" ); 
-		  ChartUtilities.saveChartAsJPEG(lineChart ,lineChartObject, width ,height);
 		
-		   ChartPanel cPanel = new ChartPanel(lineChartObject);
-		   cPanel.setBounds(103, 0, 680, 420);
-		   panel_1.add(cPanel);
+		JButton btnGeneratePdf = new JButton("Generate pdf");
+		btnGeneratePdf.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				CreatePdf cp=new CreatePdf(projects.get(index));
+				cp.writePdf();
+			}
+		});
+		btnGeneratePdf.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\pdf.png"));
+		btnGeneratePdf.setBounds(203, 367, 125, 23);
+		panel.add(btnGeneratePdf);
+		panel_1 = new JPanel();
+		tabbedPane.addTab("Stastic", new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\statistique.png"), panel_1, null);
+		panel_1.setLayout(null);
+		 
 		tabbedPane.setEnabledAt(1, true);
 		
 		JLabel label_1 = new JLabel("");
@@ -403,7 +399,50 @@ public class GuiCompteModirator extends JFrame {
 		label_1.setBounds(10, 27, 119, 140);
 		contentPane.add(label_1);
 		
+		 DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-01-01", "2016-01-31") , "projects" , "Jan" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-02-01", "2016-02-28") , "projects" , "Fab" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-03-01", "2016-03-31") , "projects" , "Mar" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-04-01", "2016-04-30") , "projects" , "Apr" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-05-01", "2016-05-31") , "projects" , "May" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-06-01", "2016-06-31") , "projects" , "Jui" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-07-01", "2016-07-30") , "projects" , "Jul" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-08-01", "2016-08-31") , "projects" , "Aug" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-09-01", "2016-09-30") , "projects" , "Sep" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-10-01", "2016-10-31") , "projects" , "Oct" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-11-01", "2016-11-30") , "projects" , "Nov" );
+		   line_chart_dataset.addValue( ProjectDelegate.getNumberProjects("2016-12-01", "2016-12-31") , "projects" , "Dec" );
+		   JFreeChart lineChartObject = ChartFactory.createLineChart(
+	        "","",
+			"",
+			line_chart_dataset,PlotOrientation.VERTICAL,
+		    true,true,false);
+			int width = 640;
+		    int height = 480;
+			File lineChart = new File( "LineChart.jpeg" ); 
+			try {
+				ChartUtilities.saveChartAsJPEG(lineChart ,lineChartObject, width ,height);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}	
+			ChartPanel cPanel = new ChartPanel(lineChartObject);
+			cPanel.setBounds(103, 0, 680, 420);
+		    panel_1.add(cPanel);
 		
+		
+		
+	}
+
+	
+	protected void btnnameactionperfomred(ActionEvent e) {
+		
+		choix=3;
+	    comboBox.removeAllItems();
+	    for(Project p :projects)
+		{
+		comboBox.addItem(p.getName()); 
+		}
 	}
 
 	protected void btnconfirmedactionperfomed(ActionEvent e) {
@@ -437,7 +476,7 @@ public class GuiCompteModirator extends JFrame {
 	     Sendmail sm=new Sendmail(lblcemail.getText(), editorcause.getText());
 	     try {
 			sm.send();
-			JOptionPane.showMessageDialog(this, "Your mail are sended with succeful", "ERROR", 
+			JOptionPane.showMessageDialog(this, "Your mail are sended with succeful", "INFORMATION", 
 	    	JOptionPane.INFORMATION_MESSAGE, 
 		    new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\gmail.png"));
 			ProjectDelegate.remove(projects.get(index));
@@ -462,7 +501,7 @@ public class GuiCompteModirator extends JFrame {
 	}
 
 	protected void btnDetailsActionperfomed(ActionEvent e) {
-		Project p=null ;	
+		Project p=new Project() ;	
 	    index=new Integer(table.getSelectedRow());
 		
 		if(index==-1)
@@ -473,11 +512,15 @@ public class GuiCompteModirator extends JFrame {
 		}
 		else
 		{
-	    btnConfirmed.setEnabled(true);
-	    btnDenied.setEnabled(true);
+		p=projects.get(index);
 		tabbedPane.setEnabledAt(0, true);
 		tabbedPane.setEnabledAt(1, true);
-		p=projects.get(index);
+		if(p.isIs_confirmed()==0)
+		{
+	    btnConfirmed.setEnabled(true);
+	    btnDenied.setEnabled(true);
+		
+		}
 		lblnamep.setVisible(true);
 		lbltitle.setVisible(true);
 		lblduration.setVisible(true);
@@ -525,11 +568,19 @@ public class GuiCompteModirator extends JFrame {
 		{				
 		table.setModel(new Projcts_Model( ProjectDelegate.getListprojectsnomconfirmed(0)));
 		}
+		if(choix==3)
+		{
+		String name=(String)comboBox.getSelectedItem().toString();
+		System.out.println(name);
+		table.setModel(new Projcts_Model( ProjectDelegate.getListByname(name)));
+		}
+		
 		
 	}
 
 	protected void catbuttonActionPerformed(ActionEvent e) {
 	        choix=1;
+	        comboBox.removeAllItems();
 		    categories=CategoryDelegate.getListCategory();
 		    for(Category c :categories)
 			{
