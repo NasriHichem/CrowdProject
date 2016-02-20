@@ -44,7 +44,7 @@ public class authentification extends JFrame {
 	private int j=6;
 	private int k=6;
 	private JPasswordField pwdaa;
-
+  
 	/**
 	 * Launch the application.
 	 */
@@ -84,6 +84,10 @@ public class authentification extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		pwdaa = new JPasswordField();
+		pwdaa.setBounds(584, 171, 187, 42);
+		contentPane.add(pwdaa);
+		
 		logina = new JTextField();
 		logina.setBounds(584, 118, 187, 42);
 		contentPane.add(logina);
@@ -95,10 +99,10 @@ public class authentification extends JFrame {
 		btnConnect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				Adminstrator adminstrator = GestionAdminstratorDelegate.doAuthentificate(logina.getText(), pwdaa.getText());
-		        if(adminstrator!=null){
+				Adminstrator adminstrator = GestionAdminstratorDelegate.doAuthentificate(logina.getText(), pwdaa.getText());		      		        		 
+				if(adminstrator!=null){
 		        
-		        	System.out.println("OK ! ");
+		        	
 		        	JOptionPane.showMessageDialog(null, "Connection succeeded ! ");
 		        	if(adminstrator instanceof Modirator)
 					{
@@ -171,11 +175,7 @@ public class authentification extends JFrame {
 		btnForgottenPassword.setBounds(594, 219, 166, 23);
 		contentPane.add(btnForgottenPassword);
 		
-		pwdaa = new JPasswordField();
-		pwdaa.setBounds(584, 171, 187, 42);
-		contentPane.add(pwdaa);
-		
-		JLabel lblNewLabel = new JLabel("New label");
+		JLabel lblNewLabel = new JLabel("FGFG");
 		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\ambitousproject.jpg"));
 		lblNewLabel.setBounds(0, 0, 1125, 616);
 		contentPane.add(lblNewLabel);
