@@ -62,6 +62,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.SwingConstants;
 
 
 
@@ -122,6 +123,7 @@ public class GuiCompteModirator extends JFrame {
 		mnAccount.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\user.png"));
 		menuBar.add(mnAccount);		
 		JMenuItem mntmLogout = new JMenuItem("Logout");
+		mntmLogout.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\logout.png"));
 		mntmLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -130,6 +132,24 @@ public class GuiCompteModirator extends JFrame {
 			}
 		});
 		mnAccount.add(mntmLogout);		
+		
+		JMenuItem mntmRefreash = new JMenuItem("Refreash");
+		mntmRefreash.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				revalidate();
+			}
+		});
+		mntmRefreash.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\refresh.png"));
+		mnAccount.add(mntmRefreash);
+		
+		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		mntmExit.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\exit.png"));
+		mnAccount.add(mntmExit);
 		JMenu mnClaims = new JMenu("Claims");
 		mnClaims.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\claim.png"));
 		menuBar.add(mnClaims);		
@@ -270,25 +290,25 @@ public class GuiCompteModirator extends JFrame {
 		JLabel lblShortPresentation = new JLabel("Short presentation :");
 		lblShortPresentation.setForeground(new Color(0, 0, 128));
 		lblShortPresentation.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblShortPresentation.setBounds(10, 91, 118, 14);
+		lblShortPresentation.setBounds(10, 239, 118, 14);
 		panel.add(lblShortPresentation);
 		
 		JLabel lblDuration = new JLabel("Duration :");
 		lblDuration.setForeground(new Color(0, 0, 128));
 		lblDuration.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblDuration.setBounds(10, 135, 68, 14);
+		lblDuration.setBounds(10, 91, 68, 14);
 		panel.add(lblDuration);
 		
 		JLabel lblTurgetFunding = new JLabel("Turget funding :");
 		lblTurgetFunding.setForeground(new Color(0, 0, 128));
 		lblTurgetFunding.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblTurgetFunding.setBounds(10, 178, 87, 14);
+		lblTurgetFunding.setBounds(10, 135, 87, 14);
 		panel.add(lblTurgetFunding);
 		
 		JLabel lblLocation = new JLabel("Location :");
 		lblLocation.setForeground(new Color(0, 0, 128));
 		lblLocation.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblLocation.setBounds(10, 226, 68, 14);
+		lblLocation.setBounds(10, 187, 68, 14);
 		panel.add(lblLocation);
 		
 		JLabel lblCategory = new JLabel("Category :");
@@ -322,26 +342,27 @@ public class GuiCompteModirator extends JFrame {
 		panel.add(lbltitle);
 		
 		lblshortp = new JLabel("xxx");
+		lblshortp.setVerticalAlignment(SwingConstants.TOP);
 		lblshortp.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblshortp.setBounds(123, 91, 153, 14);
+		lblshortp.setBounds(123, 239, 238, 100);
 		lblshortp.setVisible(false);
 		panel.add(lblshortp);
 		
 		lblduration = new JLabel("xxx");
 		lblduration.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblduration.setBounds(125, 135, 131, 14);
+		lblduration.setBounds(126, 91, 131, 14);
 		lblduration.setVisible(false);
 		panel.add(lblduration);
 		
 		lbltarget = new JLabel("xxx");
 		lbltarget.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lbltarget.setBounds(125, 178, 151, 14);
+		lbltarget.setBounds(123, 135, 151, 14);
 		lbltarget.setVisible(false);
 		panel.add(lbltarget);
 		
 		lbllocation = new JLabel("xxx");
 		lbllocation.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lbllocation.setBounds(125, 226, 151, 14);
+		lbllocation.setBounds(123, 187, 151, 14);
 		lbllocation.setVisible(false);
 		panel.add(lbllocation);
 		
@@ -586,9 +607,7 @@ public class GuiCompteModirator extends JFrame {
 	      
 	    	
 	    }
-		  
-		   
-		
+		  	
 	}
 
 	protected void btnDetailsActionperfomed(ActionEvent e) {
