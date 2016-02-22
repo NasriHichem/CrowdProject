@@ -41,6 +41,11 @@
    <groupId>org.jfree</groupId>
    <version>1.0.14</version>
    </dependency>
+   <dependency>
+	<groupId>com.toedter</groupId>
+	<artifactId>jcalendar</artifactId>
+	<version>1.4</version>
+</dependency>
 		
 		<dependency>
 			<groupId>junit</groupId>

@@ -9,7 +9,7 @@ import projects.serveur.entites.Project;;
 
 public class Claim_Model  extends AbstractTableModel{
 
-    String [] colunmTab= {"claiming","objet","cause"};
+    String [] colunmTab= {"claiming","objet","cause","date publich"};
 	ArrayList<Claim>claims=new ArrayList<>() ;
 	
     
@@ -35,16 +35,26 @@ public class Claim_Model  extends AbstractTableModel{
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch(columnIndex){
         case 0:
-        return  claims.get(rowIndex).getClaiming().getFirstname()+" "+claims.get(rowIndex).getClaiming().getLastname();
+        	  return claims.get(rowIndex).getDate_publich() ;
         case 1 :
+        	  return  claims.get(rowIndex).getClaiming().getFirstname()+" "+claims.get(rowIndex).getClaiming().getLastname();
+        
+        case 2:
                 return claims.get(rowIndex).getObject();
-            case 2: 
+        case 3:  
                 return claims.get(rowIndex).getCause() ;
+            
+            	
                     
             default:
                 return null;
     }
 		
 	}
+	
+	  @Override
+	    public String getColumnName(int column) {
+	        return colunmTab[column];
+	    }
 
 }

@@ -3,8 +3,11 @@ package project.client.Presentation;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import javax.mail.MessagingException;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
@@ -19,14 +22,24 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.RowFilter;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
+import javax.transaction.Transactional.TxType;
 
 import project.client.locators.ClaimDelegate;
+import project.client.mails.Sendmail;
 import project.client.models.Claim_Model;
 import projects.serveur.entites.Claim;
 import java.awt.SystemColor;
+import java.awt.Color;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.JScrollPane;
+import com.toedter.calendar.JDateChooser;
 
 public class GuiGestionReclamation extends JFrame {
 
@@ -34,6 +47,8 @@ public class GuiGestionReclamation extends JFrame {
 	private JTable table_reclamations;
 	private ArrayList<Claim>claims=new ArrayList<>();
 	JLabel lbl_caliming,lbl_cause,lbl_objet ;
+	Integer index;
+	private JTextField textField_txtclaiming;
 
 	/**
 	 * Launch the application.
@@ -66,13 +81,15 @@ public class GuiGestionReclamation extends JFrame {
 	 */
 	public  void initialisation(){
     claims=new ArrayList<>();
-    claims=ClaimDelegate.getListclaim();
-	table_reclamations.setModel(new Claim_Model(claims));
+    claims=ClaimDelegate.getListclaim_non_confirm();
+    table_reclamations.setModel(new Claim_Model(claims));
+    	
+	
 		
 	}
 	public GuiGestionReclamation() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 628, 510);
+		setBounds(100, 100, 734, 510);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -86,19 +103,9 @@ public class GuiGestionReclamation extends JFrame {
 		JMenuItem mntmHelp = new JMenuItem("Help");
 		menuBar.add(mntmHelp);
 		contentPane = new JPanel();
-		contentPane.setBackground(SystemColor.menu);
+		contentPane.setBackground(new Color(240, 240, 240));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		
-		JLabel lblNewLabel = new JLabel("Search reclamation par:");
-		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Date");
-		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Claiming");
-		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Sujet");
-		
-		JComboBox comboBox = new JComboBox();
 		
 		JLabel lblListOfReclamtions = new JLabel("List of Reclamtions:");
 		
@@ -109,75 +116,110 @@ public class GuiGestionReclamation extends JFrame {
 		btnDetail.setIcon(new ImageIcon("C:\\Users\\khayri\\git\\CrowdProject\\src\\main\\resources\\Pictures\\detail.png"));
 		
 		JButton btnStatistique = new JButton("Statistique");
-		
-		table_reclamations = new JTable();
+		btnStatistique.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new GuiStatClaimmoderator().setVisible(true);
+			
+			}
+		});
 		
 		JButton btnRecherche = new JButton("Search");
+		btnRecherche.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String txt_claiming=textField_txtclaiming.getText();
+				claims = new ArrayList<>();
+				claims = ClaimDelegate.getclaimByclaiming(txt_claiming);
+				table_reclamations.setModel(new Claim_Model(claims));
+				
+			}
+		});
+		
+		textField_txtclaiming = new JTextField();
+		textField_txtclaiming.setColumns(10);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setDateFormatString("yyyy-MM-dd");
+		dateChooser.getCalendarButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		JButton btnSearchByDate = new JButton("Search by date");
+		btnSearchByDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		Date d=dateChooser.getDateEditor().getDate();
+				SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
+				
+				RowFilter filter=RowFilter.regexFilter(sm.format(d),0);
+				 TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(new Claim_Model(claims));
+				    sorter.setRowFilter(filter);
+				    table_reclamations.setRowSorter(sorter);
+;
+			}
+		});
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 428, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addComponent(lblListOfReclamtions)
+					.addContainerGap())
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(btnStatistique, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-					.addGap(60)
-					.addComponent(btnDetail, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE)
-					.addGap(112))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(20)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(rdbtnNewRadioButton)
-								.addComponent(rdbtnNewRadioButton_2)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnRecherche))
-								.addComponent(rdbtnNewRadioButton_1, GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(lblNewLabel)))
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 408, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-							.addComponent(lblListOfReclamtions)
-							.addGap(117))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(table_reclamations, GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
-							.addContainerGap())))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnDetail, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+								.addComponent(btnStatistique, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+							.addContainerGap())
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(btnSearchByDate, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+							.addComponent(dateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(21))))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnRecherche, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(textField_txtclaiming, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(516, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 582, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(116, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(25)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblListOfReclamtions)
-						.addComponent(lblNewLabel))
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(69)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnSearchByDate)
+								.addComponent(dateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
-							.addComponent(rdbtnNewRadioButton)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(rdbtnNewRadioButton_1)
-							.addGap(3)
-							.addComponent(rdbtnNewRadioButton_2)
+							.addComponent(btnDetail)
 							.addGap(18)
+							.addComponent(btnStatistique))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblListOfReclamtions)
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnRecherche)))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(table_reclamations, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)))
-					.addPreferredGap(ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnStatistique)
-						.addComponent(btnDetail))
-					.addGap(27)
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE))
+								.addComponent(btnRecherche)
+								.addComponent(textField_txtclaiming, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)
+							.addGap(38)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+					.addGap(83))
 		);
+		
+		table_reclamations = new JTable();
+		scrollPane.setViewportView(table_reclamations);
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel_3 = new JLabel("Caliming :");
@@ -205,19 +247,33 @@ public class GuiGestionReclamation extends JFrame {
 		panel.add(lbl_objet);
 		
 		JButton btn_confirm = new JButton("confirm");
-		btn_confirm.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btn_confirm.setBounds(178, 98, 89, 23);
+				btn_confirm.setBounds(428, 22, 89, 23);
 		panel.add(btn_confirm);
 		
 		JButton btn_denied = new JButton("denied");
 		btn_denied.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				int answer = JOptionPane.showConfirmDialog(rootPane,
+						"Are you sure to delete this claim");
+				if(answer==JOptionPane.YES_OPTION){
+					Claim c=null;
+					Integer index=new Integer(table_reclamations.getSelectedRow());
+					Sendmail sm= new Sendmail(claims.get(index).getClaiming().getEmail(), "aloooooooo");
+					try {
+						sm.send();
+						
+						ClaimDelegate.removeClaim(claims.get(index));
+						initialisation();
+					} catch (MessagingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				}
 			}
 		});
-		btn_denied.setBounds(303, 98, 89, 23);
+		btn_denied.setBounds(428, 64, 89, 23);
 		panel.add(btn_denied);
 		btnDetail.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -241,6 +297,18 @@ public class GuiGestionReclamation extends JFrame {
 				
 			}}
 		});
+		btn_confirm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Claim c=null;
+				Integer index=new Integer(table_reclamations.getSelectedRow());
+			    c=claims.get(index);
+				c.setState_claim(1);
+				ClaimDelegate.UpdateClaim(c);
+				JOptionPane.showMessageDialog(rootPane, "Claim is confirmed");
+				
+			}
+		});
+
 		
 		contentPane.setLayout(gl_contentPane);
 		initialisation();	}
