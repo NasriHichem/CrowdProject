@@ -1,31 +1,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>esprit.pidev.crowdproject</groupId>
-  <artifactId>project.client</artifactId>
+  <artifactId>projects.client</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-   <properties>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
-	</properties>
-
-	<dependencies>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>esprit.pidev.crowdproject</groupId>
-			<artifactId>projects.serveur</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<type>ejb</type>
-		</dependency>
-		<dependency>
+  
+  <properties>
+  <maven.compiler.source>1.8</maven.compiler.source>
+  <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+  
+  <dependencies>
+  <dependency>
+  <groupId>javax</groupId>
+  <artifactId>javaee-api</artifactId>
+  <version>7.0</version>
+  <scope>provided</scope>
+  </dependency>
+  
+  <dependency>
+  <groupId>org.jfree</groupId>
+  <artifactId>jfreechart</artifactId>
+  <version>1.0.14</version>
+  </dependency>
+ 
+  <dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>4.3.10.Final</version>
 		</dependency>
 		<dependency>
+
 	   <groupId>javax.mail</groupId>
 	  <artifactId>mail</artifactId>
 	  <version>1.4</version>
@@ -48,19 +52,28 @@
 </dependency>
 		
 		<dependency>
+=======
+>>>>>>> branch 'master' of https://github.com/NasriHichem/CrowdProject.git
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
-		<dependency>
-			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-ejb-client-bom</artifactId>
-			<version>9.0.0.Alpha1</version>
-			<type>pom</type>
+  <dependency>
+  
+			<groupId>esprit.pidev.crowdproject</groupId>
+			<artifactId>projects.serveur</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			 
+			 
 		</dependency>
-	</dependencies>
-
-	<build>
+		 <dependency>
+        <groupId>org.wildfly</groupId>
+        <artifactId>wildfly-client-all</artifactId>
+        <version>9.0.0.Final</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
@@ -86,4 +99,6 @@
 			</plugin>
 		</plugins>
 	</build>
+  
+  
 </project>

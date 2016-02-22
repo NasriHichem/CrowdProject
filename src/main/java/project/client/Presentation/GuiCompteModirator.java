@@ -62,23 +62,24 @@ import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.SwingConstants;
 
 
 
 public class GuiCompteModirator extends JFrame {
 	
-    private int min=0,max=5;
+    private int min=0,max=10;
 	private JPanel contentPane;
 	private JTable table_projects;
 	private JTable table;
 	private JComboBox<String> comboBox;
 	private ArrayList<Category>categories=new ArrayList<>();
-	private ArrayList<Project>projects=new ArrayList<>();
+	private ArrayList<Project>projects=new ArrayList<>();	
 	JLabel lblnamep,lbltitle,lblshortp,lblduration,lbltarget,lbllocation,lblcat,lblnamec,lblcemail,
 	lblCauseOfDenied ;
 	JPanel panel,panel_1 ;
 	JTabbedPane tabbedPane;
-	JButton btnConfirmed,btnDenied,label_1  ;
+	JButton btnConfirmed,btnDenied,label_1,btnNext,btnPrev  ;
 	JEditorPane editorcause;
 	int choix ;
 	Integer index;
@@ -113,18 +114,16 @@ public class GuiCompteModirator extends JFrame {
 	 */
 	public GuiCompteModirator() throws IOException, ParseException {
 		
-		ArrayList<Project>projectpage=new ArrayList<>();
+		ArrayList<Project>projectspage=new ArrayList<>();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 859, 742);
-		
+		setBounds(100, 100, 859, 742);		
 		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
+		setJMenuBar(menuBar);		
 		JMenu mnAccount = new JMenu("Account");
 		mnAccount.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\user.png"));
-		menuBar.add(mnAccount);
-		
+		menuBar.add(mnAccount);		
 		JMenuItem mntmLogout = new JMenuItem("Logout");
+		mntmLogout.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\logout.png"));
 		mntmLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -132,12 +131,28 @@ public class GuiCompteModirator extends JFrame {
 			    dispose();
 			}
 		});
-		mnAccount.add(mntmLogout);
+		mnAccount.add(mntmLogout);		
 		
+		JMenuItem mntmRefreash = new JMenuItem("Refreash");
+		mntmRefreash.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				revalidate();
+			}
+		});
+		mntmRefreash.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\refresh.png"));
+		mnAccount.add(mntmRefreash);
+		
+		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		mntmExit.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\exit.png"));
+		mnAccount.add(mntmExit);
 		JMenu mnClaims = new JMenu("Claims");
 		mnClaims.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\claim.png"));
-		menuBar.add(mnClaims);
-		
+		menuBar.add(mnClaims);		
 		JMenuItem mntmManageClaims = new JMenuItem("Manage claims");
 		mntmManageClaims.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -223,17 +238,27 @@ public class GuiCompteModirator extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(314, 65, 493, 149);
 		contentPane.add(scrollPane);
-		projects=ProjectDelegate.getList();
-		for(int i=min;i<max;i++)
-		{
-			projectpage.add(projects.get(i));
-		}
 		table = new JTable();
 		scrollPane.setViewportView(table);
-		table.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
-		table.setModel(new Projcts_Model(projectpage));
+		table.setBorder(new LineBorder(new Color(0, 0, 0)));		
 		table.setBackground(Color.WHITE);
+		projects=ProjectDelegate.getList();
+		if(projects.size()>10)
+		{
+		for(int i=min;i<max;i++)
+		{
+			projectspage.add(projects.get(i));
+		}
+		table.setModel(new Projcts_Model(projectspage));
+		}
+		else
+		{
+		 table.setModel(new Projcts_Model(projects));
+		 btnNext.setEnabled(false);
+		 btnPrev.setEnabled(false);
+		 
+		}
+		
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 236, 843, 515);
@@ -265,25 +290,25 @@ public class GuiCompteModirator extends JFrame {
 		JLabel lblShortPresentation = new JLabel("Short presentation :");
 		lblShortPresentation.setForeground(new Color(0, 0, 128));
 		lblShortPresentation.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblShortPresentation.setBounds(10, 91, 118, 14);
+		lblShortPresentation.setBounds(10, 239, 118, 14);
 		panel.add(lblShortPresentation);
 		
 		JLabel lblDuration = new JLabel("Duration :");
 		lblDuration.setForeground(new Color(0, 0, 128));
 		lblDuration.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblDuration.setBounds(10, 135, 68, 14);
+		lblDuration.setBounds(10, 91, 68, 14);
 		panel.add(lblDuration);
 		
 		JLabel lblTurgetFunding = new JLabel("Turget funding :");
 		lblTurgetFunding.setForeground(new Color(0, 0, 128));
 		lblTurgetFunding.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblTurgetFunding.setBounds(10, 178, 87, 14);
+		lblTurgetFunding.setBounds(10, 135, 87, 14);
 		panel.add(lblTurgetFunding);
 		
 		JLabel lblLocation = new JLabel("Location :");
 		lblLocation.setForeground(new Color(0, 0, 128));
 		lblLocation.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblLocation.setBounds(10, 226, 68, 14);
+		lblLocation.setBounds(10, 187, 68, 14);
 		panel.add(lblLocation);
 		
 		JLabel lblCategory = new JLabel("Category :");
@@ -317,26 +342,27 @@ public class GuiCompteModirator extends JFrame {
 		panel.add(lbltitle);
 		
 		lblshortp = new JLabel("xxx");
+		lblshortp.setVerticalAlignment(SwingConstants.TOP);
 		lblshortp.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblshortp.setBounds(123, 91, 153, 14);
+		lblshortp.setBounds(123, 239, 238, 100);
 		lblshortp.setVisible(false);
 		panel.add(lblshortp);
 		
 		lblduration = new JLabel("xxx");
 		lblduration.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lblduration.setBounds(125, 135, 131, 14);
+		lblduration.setBounds(126, 91, 131, 14);
 		lblduration.setVisible(false);
 		panel.add(lblduration);
 		
 		lbltarget = new JLabel("xxx");
 		lbltarget.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lbltarget.setBounds(125, 178, 151, 14);
+		lbltarget.setBounds(123, 135, 151, 14);
 		lbltarget.setVisible(false);
 		panel.add(lbltarget);
 		
 		lbllocation = new JLabel("xxx");
 		lbllocation.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-		lbllocation.setBounds(125, 226, 151, 14);
+		lbllocation.setBounds(123, 187, 151, 14);
 		lbllocation.setVisible(false);
 		panel.add(lbllocation);
 		
@@ -446,7 +472,7 @@ public class GuiCompteModirator extends JFrame {
 			cPanel.setBounds(103, 0, 680, 420);
 		    panel_1.add(cPanel);
 		    
-		    JButton btnNext = new JButton("Next");
+		    btnNext = new JButton("Next");
 		    btnNext.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
 		    btnNext.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\next.png"));
 		    btnNext.addActionListener(new ActionListener() {
@@ -456,7 +482,7 @@ public class GuiCompteModirator extends JFrame {
 		    });
 		    btnNext.setBounds(707, 225, 89, 23);
 		    contentPane.add(btnNext);		    
-		    JButton btnPrev = new JButton("Prev");
+		     btnPrev = new JButton("Prev");
 		    btnPrev.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
 		    btnPrev.setIcon(new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\prev.png"));
 		    btnPrev.addActionListener(new ActionListener() {
@@ -475,25 +501,39 @@ public class GuiCompteModirator extends JFrame {
 	
 	protected void prevbtnactionperformed(ActionEvent e) {
 		
-		min-=5;
-		max-=5;
+	 	min-=10;
+		max-=10;
 		ArrayList<Project>projectspage=new ArrayList<>();
+		
 		for(int i=min;i<max;i++)
 		{
 		projectspage.add(projects.get(i));
 		}
 		table.setModel(new Projcts_Model(projectspage));
-		
-	}
+		}
+	
 
 	protected void nextbtnactionperfomred(ActionEvent e) {
-		min+=5;
-		max+=5;
+		min+=10;
+		max+=10;
 		ArrayList<Project>projectspage=new ArrayList<>();
+		if(max<=projects.size())
+		{
 		for(int i=min;i<max;i++)
 		{
 		projectspage.add(projects.get(i));
 		}
+		}
+		else
+		{
+		 if(max>projects.size())
+		{
+		 for(int i=min;i<projects.size();i++)
+		  {
+		    projectspage.add(projects.get(i));
+		} 
+	    }
+		}		
 		table.setModel(new Projcts_Model(projectspage));
 		
 	}
@@ -567,9 +607,7 @@ public class GuiCompteModirator extends JFrame {
 	      
 	    	
 	    }
-		  
-		   
-		
+		  	
 	}
 
 	protected void btnDetailsActionperfomed(ActionEvent e) {
@@ -622,33 +660,104 @@ public class GuiCompteModirator extends JFrame {
 	}
 
 	protected void searchbuttonActionPerformed(ActionEvent e) {
-		
+		projects=new ArrayList<>();
+		ArrayList<Project>projectspage=new ArrayList<>();
 		if(choix==1)
 		{
 		String category=categories.get(comboBox.getSelectedIndex()).getName_category();
-		projects=new ArrayList<>();
 		projects=ProjectDelegate.getListByCategory(category);
 		if(projects.size()==0)
 		{
-			JOptionPane.showMessageDialog(this, "No project matched this category", "ERROR", 
-			JOptionPane.INFORMATION_MESSAGE, 
-			new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\erreur.png"));
+		 JOptionPane.showMessageDialog(this, "No project matched this category", "ERROR", 
+		 JOptionPane.INFORMATION_MESSAGE, 
+		 new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\erreur.png"));
 		}
+		else
+		{
+		if(projects.size()<10)
+		{		
+		btnNext.setEnabled(false);
+		btnPrev.setEnabled(false);
 		table.setModel(new Projcts_Model(projects));
 		}
+		else
+		{
+		if(projects.size()>10)
+		{  
+			if(!btnNext.isEnabled()&&!btnPrev.isEnabled())
+		    {
+			btnNext.setEnabled(true);
+			btnPrev.setEnabled(true);
+		    }
+			for(int i=min;i<max;i++)
+			{
+			projectspage.add(projects.get(i));
+			}
+			table.setModel(new Projcts_Model(projectspage));		
+		}}}}
+		
 		if(choix==2)
-		{				
-		table.setModel(new Projcts_Model( ProjectDelegate.getListprojectsnomconfirmed(0)));
+		{
+		projects= ProjectDelegate.getListprojectsnomconfirmed(0);
+		if(projects.size()==0)
+		{
+		 JOptionPane.showMessageDialog(this, "No project is no confirmed", "ERROR", 
+		 JOptionPane.INFORMATION_MESSAGE, 
+		 new ImageIcon("C:\\Users\\Hichem\\workspace\\project.client\\src\\main\\resources\\Pictures\\erreur.png"));
 		}
+		else
+		{
+		if(projects.size()<10)
+		{		
+		btnNext.setEnabled(false);
+		btnPrev.setEnabled(false);
+		table.setModel(new Projcts_Model(projects));
+		}
+		else
+		{
+		if(projects.size()>10)
+		{  
+			if(!btnNext.isEnabled()&&!btnPrev.isEnabled())
+		    {
+			btnNext.setEnabled(true);
+			btnPrev.setEnabled(true);
+		    }
+			for(int i=min;i<max;i++)
+			{
+			projectspage.add(projects.get(i));
+			}
+			table.setModel(new Projcts_Model(projectspage));
+		}}}}
+		
 		if(choix==3)
 		{
 		String name=(String)comboBox.getSelectedItem().toString();
-		System.out.println(name);
-		table.setModel(new Projcts_Model( ProjectDelegate.getListByname(name)));
+		projects=ProjectDelegate.getListByname(name);
+		
+		if(projects.size()<10)
+		{		
+		btnNext.setEnabled(false);
+		btnPrev.setEnabled(false);
+		table.setModel(new Projcts_Model(projects));
 		}
+		else
+		{
+		if(projects.size()>10)
+		{  
+			if(!btnNext.isEnabled()&&!btnPrev.isEnabled())
+		    {
+			btnNext.setEnabled(true);
+			btnPrev.setEnabled(true);
+		    }
+			for(int i=min;i<max;i++)
+			{
+			projectspage.add(projects.get(i));
+			}
+			table.setModel(new Projcts_Model(projectspage));
+		}}}}
+
 		
-		
-	}
+
 
 	protected void catbuttonActionPerformed(ActionEvent e) {
 	        choix=1;
